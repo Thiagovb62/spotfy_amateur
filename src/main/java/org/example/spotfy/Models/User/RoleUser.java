@@ -1,4 +1,4 @@
-package org.example.spotfy.Models;
+package org.example.spotfy.Models.User;
 
 public enum RoleUser {
 
