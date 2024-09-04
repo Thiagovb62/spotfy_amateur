@@ -1,5 +1,6 @@
 package org.example.spotfy.Controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.example.spotfy.Infra.Security.Jwt.TokenService;
 import org.example.spotfy.Models.User.Usuario;
@@ -25,8 +26,9 @@ public class AutenticationController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity autenticar(@RequestBody @NotBlank String email, @RequestBody @NotBlank String password){
-        var authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+    public ResponseEntity autenticar(@RequestBody @Valid Usuario.DadosUser dadosUser){
+        var authenticationToken = new UsernamePasswordAuthenticationToken(dadosUser.email(), dadosUser.password());
+        System.out.println(authenticationToken);
         var authentication = manager.authenticate(authenticationToken);
 
         var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());

@@ -21,7 +21,10 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "email", unique = true)
     private String email;
+
     private String password;
     private RoleUser role;
     private Boolean isPremium;

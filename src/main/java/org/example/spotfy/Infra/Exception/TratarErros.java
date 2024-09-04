@@ -7,10 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
+
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.naming.AuthenticationException;
 
 @RestControllerAdvice
 public class TratarErros{
@@ -76,6 +82,43 @@ public class TratarErros{
         pb.setTitle("Duplicate Music in Playlist");
         pb.setDetail(ex.getMessage());
         pb.setType(URI.create("/problems/duplicate-music-in-playlist"));
+
+        return pb;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail tratarErroBadCredentials() {
+
+        var pb = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+
+        pb.setTitle("Bad Credentials");
+        pb.setDetail("Credenciais inválidas");
+        pb.setType(URI.create("/problems/bad-credentials"));
+
+        return pb;
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ProblemDetail tratarErroAuthentication() {
+
+        var pb = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+
+        pb.setTitle("Authentication Error");
+        pb.setDetail("Falha na autenticação");
+        pb.setType(URI.create("/problems/authentication-error"));
+
+        return pb;
+
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail tratarErroAcessoNegado() {
+
+        var pb = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+
+        pb.setTitle("Access Denied");
+        pb.setDetail("Acesso negado");
+        pb.setType(URI.create("/problems/access-denied"));
 
         return pb;
 

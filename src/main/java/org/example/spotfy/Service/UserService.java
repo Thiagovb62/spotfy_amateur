@@ -21,19 +21,22 @@ public class UserService {
      }
 
     public void createUser(Usuario.DadosUser dadosUser) {
+        if (userRepository.findOne(dadosUser.email()) != null) {
+            throw new IllegalArgumentException("Usuário já cadastrado");
+        }
         Usuario user = new Usuario(dadosUser);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
-    public void bePremium(String email) {
-        Usuario user = userRepository.findOne(email);
+    public void bePremium(Long id) {
+        Usuario user = userRepository.findById(id).get();
         user.setIsPremium(true);
         userRepository.save(user);
     }
 
-    public void beAdmin(String email) {
-        Usuario user = userRepository.findOne(email);
+    public void beAdmin(Long id) {
+        Usuario user = userRepository.findById(id).get();;
         user.setRole(RoleUser.ADMIN_USER);
         userRepository.save(user);
     }

@@ -4,10 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.example.spotfy.Models.User.Usuario;
 import org.example.spotfy.Service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController()
 @RequestMapping("/user")
@@ -20,18 +18,19 @@ public class UserControler {
     }
 
     @PostMapping("/register")
-    public void createUser(@RequestBody @Valid Usuario.DadosUser dadosUser) {
+    public ResponseEntity<String> createUser(@RequestBody @Valid Usuario.DadosUser dadosUser) throws IllegalArgumentException {
         userService.createUser(dadosUser);
+        return ResponseEntity.created(null).body("Usuário cadastrado com sucesso");
     }
 
     @PostMapping("/premium")
-    public void bePremium(String email) {
-        userService.bePremium(email);
+    public void bePremium(@PathVariable Long id) {
+        userService.bePremium(id);
     }
 
-    @PostMapping("/admin")
-    public void beAdmin(String email) {
-        userService.beAdmin(email);
+    @PostMapping("/admin/{id}")
+    public void beAdmin(@PathVariable Long id) {
+        userService.beAdmin(id);
     }
 
 }
