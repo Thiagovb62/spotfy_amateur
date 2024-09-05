@@ -29,7 +29,9 @@ public class SecurityConfiguration {
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers("/login").permitAll();
                             req.requestMatchers("/user/register").permitAll();
-                            req.requestMatchers("/musicas/listar").hasRole("ADMIN_USER");
+                            req.requestMatchers("/musicas/salvar").hasRole("ADMIN_USER");
+                            req.requestMatchers("/playlist/criar/").hasRole("PREMIUM_USER");
+                            req.requestMatchers("/playlist/add/").hasRole("PREMIUM_USER");
                             req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
                             req.anyRequest().authenticated();
                         })
