@@ -20,7 +20,7 @@ public interface PlaylistRepository  extends JpaRepository<PlayList, Long> {
 
 
     @Query("SELECT DISTINCT p FROM PlayList p JOIN PlayListMusic pm on pm.playlist.id = p.id join Musicas m on pm.musica.id = m.id WHERE LOWER(m.artista) LIKE LOWER(CONCAT(:artista, '%')) OR LOWER(m.artista) = LOWER(:artista)")
-    List<PlayList> findPlayListsByAtistName(String artista);
+    Page<PlayList> findPlayListsByAtistName(String artista, Pageable pageable);
 
 
     Boolean existsByNome(String nome);

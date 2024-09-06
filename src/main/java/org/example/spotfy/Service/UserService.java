@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -30,13 +32,16 @@ public class UserService {
     }
 
     public void bePremium(Long id) {
-        Usuario user = userRepository.findById(id).get();
-        user.setIsPremium(true);
-        userRepository.save(user);
+        Optional<Usuario> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Usuário não encontrado");
+        }
+        user.get().setRole(RoleUser.PREMIUM_USER);
+        userRepository.save(user.get());
     }
 
     public void beAdmin(Long id) {
-        Usuario user = userRepository.findById(id).get();;
+        Usuario user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
         user.setRole(RoleUser.ADMIN_USER);
         userRepository.save(user);
     }

@@ -11,6 +11,7 @@ import org.example.spotfy.Repository.MusicaRepository;
 import org.example.spotfy.Repository.PlaylistRepository;
 import org.example.spotfy.Repository.UserSpotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,16 @@ public class PlayListService {
 
 
     public List<PlayList> ListMyPlayLists(Long user_id){
-        return playlistRepository.findAllPlayListByUser_Spot_Id(user_id);
+        List<PlayList> playLists = playlistRepository.findAllPlayListByUser_Spot_Id(user_id);
+        if (playLists.isEmpty()){
+            throw new RecordDoesntExistExecetion(String.format("Nao foi possivel localizar playlists do usuario %s", user_id));
+        }
+        return playLists;
     }
 
 
-    public List<PlayList> listAllPlayListSWithArtistName(String nome, Pageable page){
-        List <PlayList> playLists = playlistRepository.findPlayListsByAtistName(nome);
+    public Page<PlayList> listAllPlayListSWithArtistName(String nome, Pageable page){
+        Page<PlayList> playLists = playlistRepository.findPlayListsByAtistName(nome, page);
         if (playLists.isEmpty()){
             throw new RecordDoesntExistExecetion(String.format("Nao foi possivel localizar playlists com o Artista %s", nome));
         }
